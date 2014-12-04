@@ -49,6 +49,7 @@ void setup()                    // run once, when the sketch starts
 // Global variables go here...
 int x = 3;  //coordinates of player dot
 int y = 4;
+int marker = 1;
 int xa = random(8);  //apple vars
 int ya = random(8);
 int direction = 0;  //possible values are 0, 90, 180, and 270
@@ -57,13 +58,12 @@ struct Point
   int x;
   int y;
 };
-//Point p1 = {3,4};  // p1.x = 3; p1.y = 4
-Point snakeArray[64] =
-{p1, p2, p3};
 
-Point p1 = {3,4,};
+Point p1 = {3,4};
 Point p2 = {4,4};
 Point p3 = {5,4};
+//Point p1 = {3,4};  // p1.x = 3; p1.y = 4
+Point snakeArray[64] = {p1, p2, p3};
 
 /*
   DrawPxplayer  -  call drawSNAKE
@@ -74,16 +74,24 @@ Point p3 = {5,4};
   CORRECT FOR WRAPPING
 */
 
-void loop()
+void drawSnake()
 {
-  void drawSnake()
+  for (int i = 0; i < marker; i++)
   {
-    for(int i = 0; i < marker; i++)
-    {
-      DrawPx(snakeArray [i].x, snakeArray[i].y,Green)
-    }
+    DrawPx(snakeArray[i].x, snakeArray[i].y,Green);
   }
+}
   
+void updateSnake()
+{
+  for (int i = marker - 1; i >0; i --)
+  {
+    snakeArray[i] = snakeArray[i-1];
+  }
+}
+
+void loop()
+{ 
   Serial.print("x is ");
   Serial.println(x);  //ln = line
   Serial.print("y is ");
@@ -91,42 +99,69 @@ void loop()
   Serial.println();
   
   // DrawPx(x,y,Green);
+  drawSnake();
   DrawPx(xa,ya,Red);
   DisplaySlate();
   delay(125);
   ClearSlate();
-  
+  updateSnake();
   
   CheckButtonsDown();
+  
   if (Button_Right)
+  {
     direction = 90;
+  }
+  
   if (Button_Left)
-    direction = 270;
+  {
+    direction = 270; 
+  }
   if (Button_Up)
-    direction =0;
+  {
+    direction = 0;
+  }
   if (Button_Down)
+  {
     direction = 180;
+  }
     
   if (direction == 0)
-    y++;
-  if (direction == 90)
-    x++;
-  if (direction == 180)
-    y--;
-  if (direction == 270)
-    x--;
-  if (x > 7)
-    x = 0;
-  if (y > 7)
-    y = 0;
-  if (x < 0)
-    x = 7;
-  if (y < 0)
-    y = 7;
-    
-  if (xa == x)    //apple codes
   {
-    if (ya == y)
+    snakeArray[0].y++;
+  }
+  if (direction == 90)
+  {
+    snakeArray[0].x++;
+  }
+  if (direction == 180)
+  {
+    snakeArray[0].y--;
+  }
+  if (direction == 270)
+  {
+    snakeArray[0].x--;
+  }
+  if (snakeArray[0].x > 7)
+  {
+    snakeArray[0].x = 0;
+  }
+  if (snakeArray[0].y > 7)
+  {
+    snakeArray[0].y = 0;
+  }
+  if (snakeArray[0].x < 0)
+  {
+    snakeArray[0].x = 7;
+  }
+  if (snakeArray[0].y < 0)
+  {
+    snakeArray[0].y = 7;
+  }
+    
+  if (xa == snakeArray[0].x)    //apple codes
+  {
+    if (ya == snakeArray[0].y)
     {
       xa = random(8);
       ya = random(8);
@@ -135,98 +170,4 @@ void loop()
 
 }
   
-  
-  
-  
-  
-  
-  
-  
- /* 
-  // left and right
-  CheckButtonsDown();
-  if(Button_Right)
-   {
-   }
-   else
-   {
-     if (x < 7)
-     {
-       x = x + 1;  // Also x++;
-     }
-     else
-     {
-       x = 0;
-     }
-   }
-   
-  
-   
-   CheckButtonsDown();
-   if (Button_Left)
-   { 
-   }
-   
-   else
-   {
-     if (x > 0)
-     {
-       x = x - 1;
-     }
-   }
-    /* if (x > 0)
-     {
-       x = x -1;
-     }
-     else
-     {
-       x = 7;
-     }
-   }
-   // end
-   
-   
-   // up and down
-   CheckButtonsDown();
-  if(Button_Up)
-   {
-   }
-   else
-   {
-     if (y < 7)
-     {
-       y = y + 1;  // Also x++;
-     }
-     else
-     {
-       y = 0;
-     }
-   }
-   
-  
-   
-   CheckButtonsDown();
-   if (Button_Down)
-   {
-   }
-   else
-   {
-     if (y > 0)
-     {
-       y = y -1;
-     }
-     else
-     {
-       y = 7;
-     }
-   }
-   
-   */
-   
-   
-  
-  
-
-
-
 
